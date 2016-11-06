@@ -54,15 +54,6 @@ new GetData().execute();
 
 
 
-        for(int i=0;i<title.length;i++){
-
-Rowitem item=new Rowitem(title[i],body[i]);
-            rowitems.add(item);
-
-
-
-        }
-
 
         MyAdapter myAadapter=new MyAdapter(this,R.layout.listrow,rowitems);
         myList.setAdapter(myAadapter);
@@ -80,7 +71,13 @@ Rowitem item=new Rowitem(title[i],body[i]);
 
         @Override
         protected void onPostExecute(Void aVoid) {
+
+
+
             super.onPostExecute(aVoid);
+            ListView myList= (ListView)findViewById(R.id.mainlistview);
+            MyAdapter myAadapter=new MyAdapter(MainActivity.this,R.layout.listrow,rowitems);
+            myList.setAdapter(myAadapter);
         }
 
         @Override
@@ -92,15 +89,24 @@ Rowitem item=new Rowitem(title[i],body[i]);
 
                 try {
                     JSONArray myArray=new JSONArray(json);
+                    for(int i=0;i<myArray.length();i++){
 
+                        JSONObject c= myArray.getJSONObject(i);
+                        String title = c.getString("title");
+                        String body = c.getString("body");
+                        Rowitem item = new Rowitem(title,body);
+                        rowitems.add(item);
 
-
-
-
+}
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
+
+            }
+            else {
+                Log.e(TAG,"something wrong");
 
 
             }
