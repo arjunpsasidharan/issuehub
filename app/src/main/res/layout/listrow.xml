@@ -15,12 +15,11 @@
 
     <TextView
         android:text="TextView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/issueBody"
 
-
-        android:lines="2"
-        android:maxLines="2"
+android:maxLength="140"
+        
         tools:textSize="14sp" />
 </LinearLayout>

@@ -1,7 +1,9 @@
 package com.example.akhilansar.myapplication;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,17 +23,42 @@ class MyAdapter extends ArrayAdapter<Rowitem>{
 this.context=context;
 
     }
+ private class ViewHolder{
 
+        TextView title;
+        TextView  body;
+
+
+    }
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater myInflator=LayoutInflater.from(getContext());
-View myView=myInflator.inflate(R.layout.listrow,parent,false);
+       ViewHolder holder=null;
         Rowitem rowitem=getItem(position);
-        TextView title= (TextView)myView.findViewById(R.id.issueTitle);
-        title.setText(rowitem.getTitle());
-        TextView body=(TextView)myView.findViewById(R.id.issueBody);
-        body.setText(rowitem.getBody());
-        return  myView;
+
+        LayoutInflater myInflator=(LayoutInflater)context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+        if (convertView==null){
+            convertView=myInflator.inflate(R.layout.listrow,null);
+            holder=new ViewHolder();
+            holder.title=(TextView)convertView.findViewById(R.id.issueTitle);
+            holder.body=(TextView)convertView.findViewById(R.id.issueBody);
+        convertView.setTag(holder);
+        }
+        else {
+
+
+
+            holder=(ViewHolder)convertView.getTag();
+            if (rowitem != null) {
+                holder.title.setText(rowitem.getTitle());
+
+                holder.body.setText(rowitem.getBody());
+            }else
+                Log.e("listrow","null");
+
+
+        }
+        return  convertView;
+
     }
 }

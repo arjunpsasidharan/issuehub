@@ -11,7 +11,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -19,44 +21,30 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     String TAG=MainActivity.class.getSimpleName();
-    String[] title;
-    String [] body;
-    List<Rowitem> rowitems;
+
     ProgressDialog progressDialog;
+    ListView myList;
     String url="https://api.github.com/repos/crashlytics/secureudid/issues";
+    ArrayList<HashMap<String,String>> contactList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        rowitems =new ArrayList<Rowitem>();
-        ListView myList= (ListView)findViewById(R.id.mainlistview);
+     contactList=   new ArrayList<>();
 
-new GetData().execute();
+        myList= (ListView)findViewById(R.id.mainlistview);
 
-
-
+        new GetData().execute();
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-        MyAdapter myAadapter=new MyAdapter(this,R.layout.listrow,rowitems);
-        myList.setAdapter(myAadapter);
 
     }
 
@@ -70,17 +58,6 @@ new GetData().execute();
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-
-
-
-            super.onPostExecute(aVoid);
-            ListView myList= (ListView)findViewById(R.id.mainlistview);
-            MyAdapter myAadapter=new MyAdapter(MainActivity.this,R.layout.listrow,rowitems);
-            myList.setAdapter(myAadapter);
-        }
-
-        @Override
         protected Void doInBackground(Void... params) {
             Httphandler http=new Httphandler();
            String json= http.GetSteam(url);
@@ -89,20 +66,29 @@ new GetData().execute();
 
                 try {
                     JSONArray myArray=new JSONArray(json);
+
                     for(int i=0;i<myArray.length();i++){
 
                         JSONObject c= myArray.getJSONObject(i);
-                        String title = c.getString("title");
-                        String body = c.getString("body");
-                        Rowitem item = new Rowitem(title,body);
-                        rowitems.add(item);
+                       String title = c.getString("title");
 
-}
+                         String body = c.getString("body");
+                        HashMap<String, String > post=new HashMap<>();
+                        post.put("title",title);
+                        post.put("body",body);
+
+
+                        contactList.add(post);
+
+
+
+
+
+                    }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
 
             }
             else {
@@ -112,8 +98,23 @@ new GetData().execute();
             }
 
 
-
             return null;
         }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+
+
+            super.onPostExecute(aVoid);
+            if(progressDialog.isShowing())
+            {   progressDialog.dismiss();}
+
+
+ListView myList=(ListView)findViewById(R.id.mainlistview);
+            ListAdapter myAdapter=new SimpleAdapter(MainActivity.this,contactList,R.layout.listrow,new  String[]{"title","body"},new int[]{R.id.issueTitle,R.id.issueBody});
+            myList.setAdapter(myAdapter);
+        }
+
     }
 }
