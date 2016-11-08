@@ -20,6 +20,6 @@
         android:id="@+id/issueBody"
 
 android:maxLength="140"
-        
+
         tools:textSize="14sp" />
 </LinearLayout>

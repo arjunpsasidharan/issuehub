@@ -53,8 +53,11 @@ public class MainActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             progressDialog = new ProgressDialog(MainActivity.this);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setIndeterminate(true );
             progressDialog.setMessage("connecting.....");
             progressDialog.setCancelable(false);
+        progressDialog.show();
         }
 
         @Override
